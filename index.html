@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LTD - Produits Professionnels</title>
+    <style>
+        /* Variables CSS pour les thèmes et couleurs */
+        :root {
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --accent-color: #008cff; /* Bleu au lieu de vert */
+            --accent-secondary: #ff3366; /* Rouge comme couleur secondaire */
+            --card-bg: #1e1e1e;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --nav-bg: rgba(30, 30, 30, 0.95);
+            --transition-speed: 0.3s;
+            --glow-color: rgba(0, 140, 255, 0.3); /* Glow bleu plus discret */
+        }
+
+        /* Thème clair */
+        [data-theme="light"] {
+            --primary-bg: #f5f5f5;
+            --secondary-bg: #ffffff;
+            --text-primary: #222222;
+            --text-secondary: #666666;
+            --accent-color: #008cff;
+            --accent-secondary: #ff3366;
+            --card-bg: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --glow-color: rgba(0, 140, 255, 0.2);
+        }
+
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            min-height: 100vh;
+            padding-top: 80px; /* Espace pour la navigation en haut */
+        }
+
+        /* En-tête avec navigation et panier */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Navigation en haut */
+        .top-nav {
+            display: flex;
+            background-color: var(--nav-bg);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 40px;
+            border-radius: 12px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            color: var(--text-secondary);
+            text-decoration: none;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .nav-item i {
+            font-size: 1rem;
+            margin-bottom: 2px;
+            transition: all var(--transition-speed);
+        }
+
+        .nav-item.active {
+            color: var(--accent-color);
+            background-color: rgba(0, 140, 255, 0.1);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 14px;
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary), var(--accent-color));
+            z-index: -1;
+            animation: glow 3s infinite;
+            filter: blur(3px);
+            opacity: 0.7;
+        }
+
+        /* Bouton de changement de thème et panier */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-toggle, .cart-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary-bg);
+            color: var(--text-primary);
+            box-shadow: 0 4px 10px var(--shadow-color);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent-secondary);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .theme-toggle:hover, .cart-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px var(--shadow-color);
+        }
+
+        /* Panier */
+        .cart-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 350px;
+            height: 100vh;
+            background-color: var(--secondary-bg);
+            box-shadow: -5px 0 25px var(--shadow-color);
+            z-index: 1001;
+            transition: right 0.4s ease;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .cart-panel.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: край;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--text-secondary);
+        }
+
+        .cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--text-secondary);
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--accent-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            align-self: flex-start;
+        }
+
+        .cart-summary {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--text-secondary);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .cart-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cart-btn {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .checkout-btn {
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            color: white;
+        }
+
+        .clear-cart-btn {
+            background: transparent;
+            color: var(--accent-secondary);
+            border: 1px solid var(--accent-secondary);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .overlay.open {
+            display: block;
+        }
+
+        /* Conteneur principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Sections de contenu (cachées par défaut) */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* Titres */
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 40px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        /* Cartes */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px var(--shadow-color);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px var(--shadow-color);
+        }
+
+        /* Grille de produits */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px var(--shadow-color);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px var(--shadow-color);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .product-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .product-price {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .add-to-cart:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .add-to-cart:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .add-to-cart:disabled:hover {
+            transform: none;
+            opacity: 1;
+        }
+
+        /* Formulaires */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--text-secondary);
+            background-color: var(--secondary-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px var(--glow-color);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px var(--shadow-color);
+        }
+
+        /* Articles d'actualités */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .news-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px var(--shadow-color);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px var(--shadow-color);
+        }
+
+        .news-content {
+            padding: 20px;
+        }
+
+        .news-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        /* Expertise items */
+        .expertise-item {
+            margin-bottom: 25px;
+        }
+
+        .expertise-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .expertise-item h3 {
+            margin-bottom: 8px;
+        }
+
+        .cart-item-quantity {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+    gap: 8px;
+}
+
+.quantity-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.quantity-btn:hover {
+    background: var(--accent-secondary);
+}
+
+.quantity-input {
+    width: 60px;
+    text-align: center;
+    background: var(--secondary-bg);
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    padding: 6px;
+    font-weight: bold;
+    cursor: text;
+}
+
+.quantity-input:focus {
+    outline: none;
+    border-color: var(--accent-secondary);
+    box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.3);
+}
+
+        /* Note produit */
+        .product-note {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 3px var(--glow-color); }
+            50% { box-shadow: 0 0 10px var(--glow-color); }
+            100% { box-shadow: 0 0 3px var(--glow-color); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            .top-nav {
+                display: none; /* Cacher la nav en haut sur mobile */
+            }
+            
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: var(--nav-bg);
+                border-radius: 20px;
+                padding: 12px;
+                box-shadow: 0 0 20px var(--glow-color);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+            }
+            
+            .products-grid, .news-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cart-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .product-image {
+                font-size: 3rem;
+                height: 150px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-nav {
+                display: none;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding: 40px;
+            }
+        }
+    </style>
+    <!-- Police Inter depuis Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icônes Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Overlay pour le panier -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Panier -->
+    <div class="cart-panel" id="cartPanel">
+        <div class="cart-header">
+            <h3>Votre Panier</h3>
+            <button class="close-cart" id="closeCart"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Les articles du panier seront ajoutés ici dynamiquement -->
+        </div>
+        <div class="cart-summary">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">0,00 €</span>
+            </div>
+            <div class="cart-buttons">
+                <button class="cart-btn checkout-btn" onclick="window.location.href='commande.html'">Passer la commande</button>
+                <button class="cart-btn clear-cart-btn" id="clearCart">Vider le panier</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- En-tête avec navigation et panier -->
+    <header>
+        <div class="logo">LTD</div>
+        
+        <nav class="top-nav">
+            <a href="#" class="nav-item active" data-target="home">
+                <i class="fas fa-home"></i>
+                <span>Accueil</span>
+            </a>
+            <a href="#" class="nav-item" data-target="products">
+                <i class="fas fa-box-open"></i>
+                <span>Produits</span>
+            </a>
+            <a href="#" class="nav-item" data-target="enterprise">
+                <i class="fas fa-building"></i>
+                <span>Entreprise</span>
+            </a>
+            <a href="#" class="nav-item" data-target="news">
+                <i class="fas fa-newspaper"></i>
+                <span>Actus</span>
+            </a>
+            <a href="#" class="nav-item" data-target="contact">
+                <i class="fas fa-envelope"></i>
+                <span>Contact</span>
+            </a>
+            <a href="#" class="nav-item" data-target="pro">
+                <i class="fas fa-briefcase"></i>
+                <span>Pros</span>
+            </a>
+        </nav>
+        
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="cart-toggle" id="cartToggle">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation mobile (en bas sur mobile) -->
+    <nav class="mobile-nav">
+        <a href="#" class="nav-item active" data-target="home">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="#" class="nav-item" data-target="products">
+            <i class="fas fa-box-open"></i>
+        </a>
+        <a href="#" class="nav-item" data-target="enterprise">
+            <i class="fas fa-building"></i>
+        </a>
+        <a href="#" class="nav-item" data-target="news">
+            <i class="fas fa-newspaper"></i>
+        </a>
+        <a href="#" class="nav-item" data-target="contact">
+            <i class="fas fa-envelope"></i>
+        </a>
+        <a href="#" class="nav-item" data-target="pro">
+            <i class="fas fa-briefcase"></i>
+        </a>
+    </nav>
+
+    <!-- Conteneur principal -->
+    <div class="container">
+        <!-- Section d'accueil -->
+        <section id="home" class="page-section active">
+            <h1>LTD Services</h1>
+            <div class="card">
+                <p>Bienvenue chez LTD, votre partenaire de confiance pour des solutions professionnelles innovantes et sur mesure. Nous nous engageons à fournir des services de qualité qui répondent à vos besoins spécifiques.</p>
+                <p>Notre équipe d'experts est dédiée à votre réussite, en vous offrant un accompagnement personnalisé et des résultats tangibles.</p>
+            </div>
+            
+            <h2>Nos domaines d'expertise</h2>
+            <div class="card">
+                <div class="expertise-list">
+                    <div class="expertise-item">
+                        <h3><i class="fas fa-mobile-alt"></i> Vente de produits électroniques</h3>
+                        <p>Des téléphones dernier cri, boombox et gadgets pour rester connecté et profiter de la ville comme jamais.</p>
+                    </div>
+                    
+                    <div class="expertise-item">
+                        <h3><i class="fas fa-ticket-alt"></i> Services & tickets</h3>
+                        <p>Tickets pour vos activités, bons plans et solutions pratiques pour rendre votre quotidien plus simple.</p>
+                    </div>
+                    
+                    <div class="expertise-item">
+                        <h3><i class="fas fa-shopping-basket"></i> Produits du quotidien</h3>
+                        <p>Snacks, boissons et essentiels toujours disponibles pour recharger vos batteries à tout moment.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Produits -->
+        <section id="products" class="page-section">
+            <h1>Produits Grand Public</h1>
+            <p>Découvrez notre sélection de produits disponibles en boutique uniquement.</p>
+            
+            <h3>Produits Public Consommable</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">🍺</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Grande Bière</h3>
+                        <p class="product-description">Bière blonde rafraîchissante de 50cl, parfaite pour se détendre.</p>
+                        <div class="product-price">10$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🥃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Shot de Blue Kamikaze</h3>
+                        <p class="product-description">Shot énergisant au goût unique de blue curaçao.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍗</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Baguette de poulet grillée</h3>
+                        <p class="product-description">Baguette de poulet épicée grillée à la perfection.</p>
+                        <div class="product-price">4$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍒</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Glace cerise</h3>
+                        <p class="product-description">Glace onctueuse à la cerise, rafraîchissante et fruitée.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍫</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Glace chocolat</h3>
+                        <p class="product-description">Glace riche au chocolat pour les amateurs de cacao.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍋</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Glace citron</h3>
+                        <p class="product-description">Glace acidulée au citron, parfaite pour les journées chaudes.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🥜</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Glace pistache</h3>
+                        <p class="product-description">Glace crémeuse à la pistache, un classique raffiné.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🫐</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Glace framboise</h3>
+                        <p class="product-description">Glace fruitée à la framboise, légère et désaltérante.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍫</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Glace stracciatella</h3>
+                        <p class="product-description">Glace vanille avec des éclats de chocolat croquant.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍓</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Glace fraise</h3>
+                        <p class="product-description">Glace onctueuse à la fraise, douce et fruitée.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus de pomme</h3>
+                        <p class="product-description">Jus de pomme frais 100% naturel, sans additifs.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus de banane</h3>
+                        <p class="product-description">Jus de banane onctueux et énergétique.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus de cerise</h3>
+                        <p class="product-description">Jus de cerise acidulé et rafraîchissant.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus de groseille</h3>
+                        <p class="product-description">Jus de groseille acidulé, riche en vitamine C.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus de pamplemousse</h3>
+                        <p class="product-description">Jus de pamplemousse légèrement amer et rafraîchissant.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus de kiwi</h3>
+                        <p class="product-description">Jus de kiwi vitaminé au goût exotique.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus d'orange</h3>
+                        <p class="product-description">Jus d'orange pressé, riche en vitamine C.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus de pêche</h3>
+                        <p class="product-description">Jus de pêche doux et parfumé.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus de poire</h3>
+                        <p class="product-description">Jus de poire delicat et légèrement sucré.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus d'ananas</h3>
+                        <p class="product-description">Jus d'ananas tropical et rafraîchissant.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus de prune</h3>
+                        <p class="product-description">Jus de prune sucré et légèrement acidulé.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧃</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Jus de fraise</h3>
+                        <p class="product-description">Jus de fraise sucré et aromatique.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🥐</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Croissant</h3>
+                        <p class="product-description">Croissant beurré, croustillant à l'extérieur et moelleux à l'intérieur.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🥜</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Cacahuètes</h3>
+                        <p class="product-description">Cacahuètes grillées et salées, parfaites pour l'apéritif.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">⚡</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Boisson énergisante</h3>
+                        <p class="product-description">Boisson revitalisante pour retrouver tonus et vitalité.</p>
+                        <div class="product-price">6$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Autre Produit Public</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">🎫</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Ticket de Lavage</h3>
+                        <p class="product-description">Ticket pour utilisation des machines à laver en libre-service.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">📱</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Téléphone</h3>
+                        <p class="product-description">Smartphone dernier cri avec toutes les fonctionnalités modernes.</p>
+                        <div class="product-price">700$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">📻</div>
+                    <div class="product-content">
+                        <h3 class="product-title">BoomBox</h3>
+                        <p class="product-description">Enceinte portable puissante avec un son cristallin.</p>
+                        <div class="product-price">200$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🎟️</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Ticket à gratter</h3>
+                        <p class="product-description">Ticket à gratter pour tenter votre chance et gagner des lots.</p>
+                        <div class="product-price">150$</div>
+                        <button class="add-to-cart" disabled>En boutique uniquement</button>
+                    </div>
+                </div>
+            </div>
+
+            <p class="product-note">⚠️ Tous ces produits sont disponibles uniquement en boutique physique.</p>
+        </section>
+
+        <!-- Section Entreprise -->
+        <section id="enterprise" class="page-section">
+            <h1>Produits Entreprise</h1>
+            <p>Découvrez nos produits disponibles à la commande pour les professionnels.</p>
+            
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">🍫</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Chocolat</h3>
+                        <p class="product-description">Chocolat de qualité supérieure pour vos préparations culinaires.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" data-id="e1" data-name="Chocolat" data-price="2" data-image="🍫">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🌾</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Farine</h3>
+                        <p class="product-description">Farine polyvalente pour boulangerie et pâtisserie.</p>
+                        <div class="product-price">5$</div>
+                        <button class="add-to-cart" data-id="e2" data-name="Farine" data-price="5" data-image="🌾">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍕</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Pate a Pizza</h3>
+                        <p class="product-description">Pâte à pizza fraîche, prête à être garnie et cuite.</p>
+                        <div class="product-price">4$</div>
+                        <button class="add-to-cart" data-id="e3" data-name="Pate a Pizza" data-price="4" data-image="🍕">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🥔</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Patate</h3>
+                        <p class="product-description">Pommes de terre de qualité pour toutes vos préparations.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" data-id="e4" data-name="Patate" data-price="2" data-image="🥔">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍗</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Blanc de poulet</h3>
+                        <p class="product-description">Blanc de poulet frais, parfait pour vos plats principaux.</p>
+                        <div class="product-price">6$</div>
+                        <button class="add-to-cart" data-id="e5" data-name="Blanc de poulet" data-price="6" data-image="🍗">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🥛</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Lait</h3>
+                        <p class="product-description">Lait frais entier, idéal pour cuisine et consommation.</p>
+                        <div class="product-price">3$</div>
+                        <button class="add-to-cart" data-id="e6" data-name="Lait" data-price="3" data-image="🥛">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍅</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Sauce Tomate</h3>
+                        <p class="product-description">Sauce tomate italienne, base parfaite pour pizzas et pâtes.</p>
+                        <div class="product-price">5$</div>
+                        <button class="add-to-cart" data-id="e7" data-name="Sauce Tomate" data-price="5" data-image="🍅">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🧀</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Fromage</h3>
+                        <p class="product-description">Fromage râpé de qualité pour gratins et recettes au four.</p>
+                        <div class="product-price">4$</div>
+                        <button class="add-to-cart" data-id="e8" data-name="Fromage" data-price="4" data-image="🧀">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">📄</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Papier à roulée</h3>
+                        <p class="product-description">Papier à cigarette de qualité pour fumeurs.</p>
+                        <div class="product-price">8$</div>
+                        <button class="add-to-cart" data-id="e9" data-name="Papier à roulée" data-price="8" data-image="📄">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">💧</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Eau</h3>
+                        <p class="product-description">Eau minérale naturelle en bouteille, essentielle à la vie.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" data-id="e10" data-name="Eau" data-price="2" data-image="💧">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍚</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Sucre</h3>
+                        <p class="product-description">Sucre en poudre pour sucrer vos boissons et préparations.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" data-id="e11" data-name="Sucre" data-price="2" data-image="🍚">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">📦</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Sachet à sucre</h3>
+                        <p class="product-description">Sachets individuels de sucre pour une utilisation pratique.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" data-id="e12" data-name="Sachet à sucre" data-price="2" data-image="📦">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍿</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Carton pour popcorn</h3>
+                        <p class="product-description">Carton spécial pour servir le popcorn au cinéma.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" data-id="e13" data-name="Carton pour popcorn" data-price="2" data-image="🍿">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🥤</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Verre en Plastique</h3>
+                        <p class="product-description">Verres jetables en plastique pour événements et catering.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" data-id="e14" data-name="Verre en Plastique" data-price="2" data-image="🥤">Ajouter au panier</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🥤</div>
+                    <div class="product-content">
+                        <h3 class="product-title">Bouteille de Soda</h3>
+                        <p class="product-description">Bouteille de soda rafraîchissant de 33cl.</p>
+                        <div class="product-price">2$</div>
+                        <button class="add-to-cart" data-id="e15" data-name="Bouteille de Soda" data-price="2" data-image="🥤">Ajouter au panier</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Actualités -->
+        <section id="news" class="page-section">
+            <h1>Actualités</h1>
+            
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-content">
+                        <div class="news-date"><i class="far fa-calendar"></i> 13 Septembre 2025</div>
+                        <h3>Nouvel arrivage de produits!</h3>
+                        <p>Un important arrivage de nouveaux produits vient d'être effectué et est désormais disponible en boutique. Venez découvrir nos nouvelles références de boissons, snacks et produits électroniques.</p>
+                    </div>
+                </div>
+                
+                <div class="news-card">
+                    <div class="news-content">
+                        <div class="news-date"><i class="far fa-calendar"></i> 13 Septembre 2025</div>
+                        <h3>Nouveau design du site</h3>
+                        <p>Notre site web a été entièrement repensé avec un nouveau style moderne et une navigation améliorée. Découvrez également nos nouveaux produits ajoutés au catalogue.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Contact -->
+        <section id="contact" class="page-section">
+            <h1>Contact</h1>
+            <div class="card">
+                <p>Pour le moment, aucun contact n'est disponible. Veuillez vous rendre directement en boutique pour toute demande.</p>
+            </div>
+        </section>
+
+        <!-- Section Espace professionnels (placée à la fin) -->
+        <section id="pro" class="page-section">
+            <h1>Espace Professionnels</h1>
+            <div class="card">
+                <p class="pro-notice">
+                    <i class="fas fa-exclamation-circle"></i> Cet espace est réservé aux employés de LTD. 
+                    Si vous êtes un employé, veuillez saisir votre adresse email professionnelle pour accéder aux ressources internes.
+                </p>
+            </div>
+            
+            <form id="proForm">
+                <div class="form-group">
+                    <label for="proEmail">Email professionnel LTD *</label>
+                    <input type="email" id="proEmail" name="proEmail" required placeholder="prenom.nom@ltd-services.fr">
+                </div>
+                
+                <button type="submit">Valider et accéder</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        // Gestion du changement de thème
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Vérifier si un thème est déjà sauvegardé
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        // Mettre à jour l'icône en fonction du thème
+        if (savedTheme === 'light') {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // Basculer entre dark et light mode
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            if (newTheme === 'light') {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+        
+        // Navigation entre les sections
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.page-section');
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                const targetId = item.getAttribute('data-target');
+                
+                // Mettre à jour la navigation
+                navItems.forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                item.classList.add('active');
+                
+                // Afficher la section cible
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(targetId).classList.add('active');
+                
+                // Scroll vers le haut de la page
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+        
+        // Gestion des formulaires
+        const contactForm = document.getElementById('contactForm');
+        const proForm = document.getElementById('proForm');
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Merci pour votre message! Nous vous répondrons dans les plus brefs délais.');
+                contactForm.reset();
+            });
+        }
+        
+        if (proForm) {
+            proForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('proEmail').value;
+                if (email.endsWith('@ltd-services.fr')) {
+                    alert('Accès autorisé. Redirection vers l\'espace professionnel...');
+                    // Ici vous redirigeriez normalement vers l'espace pro
+                } else {
+                    alert('Accès refusé. Seules les adresses email @ltd-services.fr sont autorisées.');
+                }
+                proForm.reset();
+            });
+        }
+        
+        // Gestion du panier
+        const cartToggle = document.getElementById('cartToggle');
+        const closeCart = document.getElementById('closeCart');
+        const overlay = document.getElementById('overlay');
+        const cartPanel = document.getElementById('cartPanel');
+        const cartItems = document.getElementById('cartItems');
+        const cartCount = document.getElementById('cartCount');
+        const cartTotal = document.getElementById('cartTotal');
+        const clearCartBtn = document.getElementById('clearCart');
+        const addToCartButtons = document.querySelectorAll('.add-to-cart:not(:disabled)');
+        
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Ouvrir le panier
+        cartToggle.addEventListener('click', () => {
+            cartPanel.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Fermer le panier
+        closeCart.addEventListener('click', closeCartPanel);
+        overlay.addEventListener('click', closeCartPanel);
+        
+        function closeCartPanel() {
+            cartPanel.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Vider le panier
+        clearCartBtn.addEventListener('click', () => {
+            cart = [];
+            updateCart();
+            alert('Panier vidé!');
+        });
+        
+        // Ajouter au panier
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.getAttribute('data-id');
+                const name = button.getAttribute('data-name');
+                const price = parseFloat(button.getAttribute('data-price'));
+                const image = button.getAttribute('data-image');
+                
+                // Vérifier si le produit est déjà dans le panier
+                const existingItem = cart.find(item => item.id === id);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        id,
+                        name,
+                        price,
+                        image,
+                        quantity: 1
+                    });
+                }
+                
+                updateCart();
+                alert('Produit ajouté au panier!');
+            });
+        });
+        
+        // Mettre à jour le panier
+        function updateCart() {
+    // Sauvegarder le panier dans le localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Mettre à jour le compteur
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+    cartCount.textContent = totalItems;
+    
+    // Mettre à jour l'affichage du panier
+    cartItems.innerHTML = '';
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<p class="empty-cart">Votre panier est vide.</p>';
+        cartTotal.textContent = '0,00 $';
+        return;
+    }
+    
+    let total = 0;
+    
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        const cartItemElement = document.createElement('div');
+        cartItemElement.classList.add('cart-item');
+        cartItemElement.innerHTML = `
+            <div class="product-emoji" style="font-size: 2.5rem;">${item.image}</div>
+            <div class="cart-item-details">
+                <div class="cart-item-title">${item.name}</div>
+                <div class="cart-item-quantity">
+                    <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                    <input type="number" class="quantity-input" data-id="${item.id}" value="${item.quantity}" min="1">
+                    <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                </div>
+                <div class="cart-item-price">${(item.price * item.quantity).toFixed(2)} $</div>
+            </div>
+            <button class="cart-item-remove" data-id="${item.id}">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        
+        cartItems.appendChild(cartItemElement);
+        
+        // Gestion des boutons de quantité
+        const minusBtn = cartItemElement.querySelector('.minus');
+        const plusBtn = cartItemElement.querySelector('.plus');
+        const quantityInput = cartItemElement.querySelector('.quantity-input');
+        
+        // Double-clic pour éditer
+        quantityInput.addEventListener('dblclick', function() {
+            this.select();
+        });
+        
+        minusBtn.addEventListener('click', () => {
+            if (item.quantity > 1) {
+                item.quantity--;
+                quantityInput.value = item.quantity;
+                updateCart();
+            }
+        });
+        
+        plusBtn.addEventListener('click', () => {
+            item.quantity++;
+            quantityInput.value = item.quantity;
+            updateCart();
+        });
+        
+        quantityInput.addEventListener('change', (e) => {
+            const newQuantity = parseInt(e.target.value);
+            if (newQuantity > 0) {
+                item.quantity = newQuantity;
+                updateCart();
+            } else {
+                e.target.value = item.quantity;
+            }
+        });
+        
+        quantityInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                const newQuantity = parseInt(e.target.value);
+                if (newQuantity > 0) {
+                    item.quantity = newQuantity;
+                    updateCart();
+                } else {
+                    e.target.value = item.quantity;
+                }
+            }
+        });
+        
+        // Supprimer un article
+        const removeButton = cartItemElement.querySelector('.cart-item-remove');
+        removeButton.addEventListener('click', () => {
+            cart = cart.filter(cartItem => cartItem.id !== item.id);
+            updateCart();
+        });
+    });
+    
+    cartTotal.textContent = total.toFixed(2) + ' $';
+}
+  
+        // Initialiser le panier
+        updateCart();
+    </script>
+
+        <!-- Footer avec version et crédits -->
+        <footer style="
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--nav-bg);
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        z-index: 999;
+        backdrop-filter: blur(10px);
+    ">
+        <div>By bello230</div>
+        <div>v1.0.1</div>
+    </footer>
+</body>
+</html>

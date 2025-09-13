@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finaliser votre commande - LTD</title>
+    <style>
+        /* Variables CSS pour les thèmes et couleurs */
+        :root {
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --accent-color: #008cff;
+            --accent-secondary: #ff3366;
+            --card-bg: #1e1e1e;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --nav-bg: rgba(30, 30, 30, 0.95);
+            --transition-speed: 0.3s;
+            --glow-color: rgba(0, 140, 255, 0.3);
+        }
+
+        /* Thème clair */
+        [data-theme="light"] {
+            --primary-bg: #f5f5f5;
+            --secondary-bg: #ffffff;
+            --text-primary: #222222;
+            --text-secondary: #666666;
+            --accent-color: #008cff;
+            --accent-secondary: #ff3366;
+            --card-bg: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --glow-color: rgba(0, 140, 255, 0.2);
+        }
+
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .back-btn {
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px var(--shadow-color);
+        }
+
+        .order-summary {
+            margin-bottom: 30px;
+        }
+
+        .order-items {
+            margin-bottom: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--text-secondary);
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding-top: 15px;
+            border-top: 2px solid var(--accent-color);
+        }
+
+        .customer-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--text-secondary);
+            background-color: var(--secondary-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px var(--glow-color);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-secondary));
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px var(--shadow-color);
+        }
+
+        .submit-btn:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .empty-cart-message a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background-color: rgba(0, 255, 140, 0.1);
+            border-radius: 12px;
+            margin-top: 20px;
+            color: #00ff8c;
+        }
+
+        .error-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background-color: rgba(255, 51, 102, 0.1);
+            border-radius: 12px;
+            margin-top: 20px;
+            color: #ff3366;
+        }
+
+        @media (max-width: 768px) {
+            .customer-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <!-- Police Inter depuis Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icônes Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">LTD</div>
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Retour à la boutique
+            </a>
+        </header>
+
+        <h1>Finaliser votre commande</h1>
+
+        <div id="orderContent">
+            <!-- Le contenu de la commande sera généré dynamiquement -->
+        </div>
+
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner fa-spin"></i> Envoi de votre commande...
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i>
+            <h3>Commande passée avec succès!</h3>
+            <p>Votre commande a été envoyée et sera traitée rapidement.</p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-circle"></i>
+            <h3>Erreur lors de l'envoi</h3>
+            <p id="errorText">Une erreur s'est produite lors de l'envoi de votre commande.</p>
+        </div>
+    </div>
+
+    <script>
+        // Récupérer le panier depuis le localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const orderContent = document.getElementById('orderContent');
+        const loadingElement = document.getElementById('loading');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        // Afficher le contenu de la commande
+        function displayOrder() {
+            if (cart.length === 0) {
+                orderContent.innerHTML = `
+                    <div class="empty-cart-message">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h2>Votre panier est vide</h2>
+                        <p>Vous n'avez aucun article dans votre panier.</p>
+                        <a href="index.html">Retourner à la boutique</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Calculer le total
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            orderContent.innerHTML = `
+                <div class="card order-summary">
+                    <h2>Récapitulatif de la commande</h2>
+                    <div class="order-items">
+                        ${cart.map(item => `
+                            <div class="order-item">
+                                <span>${item.quantity} x ${item.name}</span>
+                                <span>${(item.price * item.quantity).toFixed(2)} $</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="order-total">
+                        <span>Total</span>
+                        <span>${total.toFixed(2)} $</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Informations personnelles</h2>
+                    <form id="customerForm">
+                        <div class="customer-form">
+                            <div class="form-group">
+                                <label for="firstName">Prénom *</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Nom *</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Téléphone *</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="discord">Discord *</label>
+                                <input type="text" id="discord" name="discord" required placeholder="Votre pseudo Discord">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="deliveryLocation">Lieu de livraison *</label>
+                                <input type="text" id="deliveryLocation" name="deliveryLocation" required placeholder="Adresse complète de livraison">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="company">Entreprise qui commande *</label>
+                                <input type="text" id="company" name="company" required placeholder="Nom de votre entreprise">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="notes">Notes supplémentaires (optionnel)</label>
+                                <textarea id="notes" name="notes" placeholder="Instructions spéciales pour la livraison"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">Confirmer la commande</button>
+                    </form>
+                </div>
+            `;
+
+            // Ajouter l'écouteur d'événement pour le formulaire
+            document.getElementById('customerForm').addEventListener('submit', handleSubmit);
+        }
+
+        // Fonction pour envoyer la commande vers Discord
+async function sendOrderToDiscord(orderData) {
+    const webhookURL = 'https://discord.com/api/webhooks/1414673713302994945/EUCW5dzicGLhEdNT18cnf4ZLbaHuRbkZBVdhG03xPc7IkQW1j75d8taXGMVFUlkDszjk';
+    
+    // Formater le message pour Discord
+    const itemsList = orderData.items.map(item => `• ${item.quantity}x ${item.name} - ${(item.price * item.quantity).toFixed(2)} $`).join('\n');
+    const total = orderData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    const discordMessage = {
+        embeds: [{
+            title: "🎉 NOUVELLE COMMANDE 🎉",
+            color: 0x0099ff,
+            fields: [
+                {
+                    name: "👤 CLIENT",
+                    value: `**Nom Prénom:** ${orderData.customer.firstName} ${orderData.customer.lastName}\n**Entreprise:** ${orderData.customer.company}`,
+                    inline: false
+                },
+                {
+                    name: "📞 CONTACT",
+                    value: `**Téléphone:** ${orderData.customer.phone}\n**Discord:** ${orderData.customer.discord}`,
+                    inline: false
+                },
+                {
+                    name: "📍 LIVRAISON",
+                    value: orderData.customer.deliveryLocation,
+                    inline: false
+                },
+                {
+                    name: "🛒 ARTICLES",
+                    value: itemsList || "Aucun article",
+                    inline: false
+                },
+                {
+                    name: "💰 TOTAL",
+                    value: `**${total.toFixed(2)} $**`,
+                    inline: true
+                },
+                {
+                    name: "📝 NOTES",
+                    value: orderData.customer.notes || "Aucune note",
+                    inline: true
+                },
+                {
+                    name: "📅 DATE",
+                    value: new Date().toLocaleString('fr-FR'),
+                    inline: true
+                }
+            ],
+            footer: {
+                text: "LTD Boutique - Système de commandes"
+            },
+            timestamp: new Date().toISOString()
+        }]
+    };
+
+    try {
+        const response = await fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(discordMessage),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Erreur lors de l\'envoi vers Discord:', error);
+        throw error;
+    }
+}
+
+        // Gérer la soumission du formulaire
+        async function handleSubmit(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            const customer = {
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                phone: formData.get('phone'),
+                discord: formData.get('discord'),
+                deliveryLocation: formData.get('deliveryLocation'),
+                company: formData.get('company'),
+                notes: formData.get('notes')
+            };
+
+            // Afficher l'indicateur de chargement
+            loadingElement.style.display = 'block';
+            
+            try {
+                // Préparer les données de la commande
+                const orderData = {
+                    customer: customer,
+                    items: cart,
+                    total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                    date: new Date().toISOString()
+                };
+
+                // Envoyer la commande à Discord
+                await sendOrderToDiscord(orderData);
+
+                // Afficher le message de succès
+                loadingElement.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Vider le panier
+                localStorage.removeItem('cart');
+                cart = [];
+                
+                // Masquer le formulaire
+                form.style.display = 'none';
+                
+            } catch (error) {
+                loadingElement.style.display = 'none';
+                errorText.textContent = error.message || 'Une erreur s\'est produite lors de l\'envoi de votre commande. Veuillez réessayer.';
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Afficher la commande au chargement de la page
+        document.addEventListener('DOMContentLoaded', displayOrder);
+    </script>
+
+        <!-- Footer avec version et crédits -->
+        <footer style="
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--nav-bg);
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        z-index: 999;
+        backdrop-filter: blur(10px);
+    ">
+        <div>By bello230</div>
+        <div>v1.0.1</div>
+    </footer>
+</body>
+</html>
